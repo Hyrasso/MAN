@@ -24,7 +24,7 @@ void setup(){
 void draw(){
   background(hue, sat, 1);
   
-  //Send message to all clients very 5 seconds
+  //Send message to all clients very 1 min
   if(millis()>now+36000){
     ws.sendMessage("PING");
     now=millis();
@@ -34,17 +34,30 @@ void draw(){
 }
 
 void webSocketServerEvent(String msg) {
-  //println(msg);
+  // println(msg);
   try  {
     JSONObject data = parseJSONObject(msg);
-    println(data.getString("message"));
-    if (!data.isNull("touch")) {
-      JSONObject t = data.getJSONObject("touch");
-      hue = t.getFloat("x");
-      sat = t.getFloat("y");
+    if (!data.isNull("type")) {
+      switch (data.getString("type")) {
+        case "move":
+        case "start":
+        case "end":
+          JSONObject t = data.getJSONObject("touch");
+          sat = t.getFloat("x");
+          hue = t.getFloat("y");
+          println("touch");
+          break;
+        case "shake":
+        default:
+          println("type", data.getString("type"));
+          break;
+      }
+        
+    } else {
+      println(data.getString("message"));
     }
   } catch (Exception e) {
-    println("Error with : ", msg); 
+    println("Error with :", msg); 
   }
 }
 

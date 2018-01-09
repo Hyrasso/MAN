@@ -63,9 +63,8 @@ function windowResized() {
 }
 
 function draw() {
-    
-    if (websocket.readyState != websocket.OPEN)
-    {
+    background(color, .5, .7)
+    if (websocket.readyState != websocket.OPEN) {
         push()
         fill(1, 1, 0.5)
         textAlign(CENTER)
@@ -73,7 +72,6 @@ function draw() {
         pop()
         textAlign(LEFT)
     }
-    background(color, .5, .7)
     if (DEBUG)
     info.forEach((e, i) => {
         i++
