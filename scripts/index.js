@@ -1,4 +1,4 @@
-let adr = "HY:8080/man"
+let adr = "http://619d8804.ngrok.io/man"
 let websocket = new WebSocket('ws://' + adr)
 
 const DEBUG = true
