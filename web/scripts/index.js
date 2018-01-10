@@ -26,7 +26,10 @@ sessionStorage.setItem("man_id", MAN_ID)
 console.log(MAN_ID)
 
 function sendEvent(info) {
-    let rotation_infos = {rotation: rotation}
+    let rotation_infos = {}
+    if (Object.keys(rotation).length !== 0) {
+        rotation_infos = {rotation: rotation}
+    }
     let message_object = Object.assign(info, rotation_infos, ID_OBJ)
     let message = JSON.stringify(Object.assign(info, ID_OBJ))
     websocket.send(message)
@@ -113,18 +116,23 @@ function deviceShaken() {
 
 function touchMoved() {
     info.unshift("Moves " + touches.length)
-    let pos;
     if (typeof touches[0] == "undefined") {
         console.log("No touch")
-        pos = {x:mouseX / width, y:mouseY/height, id:-1}
+        let pos = {x:mouseX / width, y:mouseY/height, id:0}
+        sendEvent({
+            message: "Touch move",
+            touch: formatTouch(pos),
+            type: "move"
+        })
     } else {
-        pos = touches[0]
+        touches.forEach((e) => {
+            sendEvent({
+                message: "Touch move",
+                touch: formatTouch(e),
+                type: "move"
+            })
+        })
     }
-    sendEvent({
-        message: "Touch move",
-        touch: formatTouch(pos),
-        type: "move"
-    })
     return false
 }
 
